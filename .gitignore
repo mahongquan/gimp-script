@@ -1,0 +1,5 @@
+DLLs/*
+Lib/*
+*.pyc
+*.dll
+*.exe

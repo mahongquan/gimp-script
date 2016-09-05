@@ -1,16 +1,7 @@
 #!/usr/bin/env python
-import sys
-#import glib
-try:
-	import pygtk
-	pygtk.require("2.0")
-except:
-	pass
-try:
-	import pygtk
-	import gtk.glade
-except:
-	sys.exit(1)
+import pygtk
+pygtk.require('2.0')
+import gtk
 class HelloWorldGTK:
 	"""This is an Hello World GTK application"""
 	def __init__(self):
@@ -28,5 +19,6 @@ class HelloWorldGTK:
 		print "Hello World!"	
 		
 if __name__ == "__main__":
+	print("run")
 	hwg = HelloWorldGTK()
-	gtk.main()
+	hwg.window.show_all()

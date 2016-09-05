@@ -11,7 +11,6 @@ class HelloWorld:
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def hello(self, widget, data=None):
-        self.entry.set_text(data)
         print "Hello World"
 
     def delete_event(self, widget, event, data=None):
@@ -51,35 +50,26 @@ class HelloWorld:
     
         # Creates a new button with the label "Hello World".
         self.button = gtk.Button("Hello World")
-        self.entry = gtk.Entry()
-        v=gtk.VBox()
+    
         # When the button receives the "clicked" signal, it will call the
         # function hello() passing it None as its argument.  The hello()
         # function is defined above.
-        self.button.connect("clicked", self.hello, "data")
+        self.button.connect("clicked", self.hello, None)
     
         # This will cause the window to be destroyed by calling
         # gtk_widget_destroy(window) when "clicked".  Again, the destroy
         # signal could come from here, or the window manager.
-        #self.button.connect_object("clicked", gtk.Widget.destroy, self)
-        image = gtk.Image()
-        image.set_from_file("hills.jpg")
+        self.button.connect_object("clicked", gtk.Widget.destroy, self.window)
+    
         # This packs the button into the window (a GTK container).
-        v.add(self.entry)
-        v.add(self.button)
-        swin = gtk.ScrolledWindow()
-        #swin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-        swin.add(image)
-        v.add(swin)
-        self.window.add(v)
+        self.window.add(self.button)
     
         # The final step is to display this newly created widget.
-        #self.button.show()
+        self.button.show()
     
         # and the window
-        #self.window.show()
-        self.window.set_default_size(500, 400)
-        self.window.show_all()
+        self.window.show()
+
     def main(self):
         # All PyGTK applications must have a gtk.main(). Control ends here
         # and waits for an event to occur (like a key press or mouse event).

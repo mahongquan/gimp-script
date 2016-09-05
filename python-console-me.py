@@ -72,18 +72,29 @@ def do_console():
             self.browse_dlg = None
             self.save_dlg = None
 
-            vbox = gtk.VBox(False, 12)
-            vbox.set_border_width(12)
-            self.vbox.pack_start(vbox)
+            #vbox = gtk.VBox(False, 12)
+            #vbox.set_border_width(12)
+            #self.vbox.pack_start(vbox)
+            self.b1=gtk.Button()
+            self.b1.connect("clicked",self.b1_clicked)
+            self.vbox.add(self.b1)
 
             scrl_win = gtk.ScrolledWindow()
             scrl_win.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-            vbox.pack_start(scrl_win)
+            self.vbox.add(scrl_win)
 
             scrl_win.add(self.cons)
 
             self.set_default_size(500, 500)
-
+        def b1_clicked(self,b):
+            dialog=gtk.FileChooserDialog(title=None,action=gtk.FILE_CHOOSER_ACTION_OPEN,
+                                  buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+            response = dialog.run()
+            if response == gtk.RESPONSE_OK:
+                print dialog.get_filename(), 'selected'
+            elif response == gtk.RESPONSE_CANCEL:
+                print 'Closed, no files selected'
+            dialog.destroy()
         def response(self, dialog, response_id):
             if response_id == RESPONSE_BROWSE:
                 self.browse()

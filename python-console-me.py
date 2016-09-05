@@ -86,15 +86,61 @@ def do_console():
             scrl_win.add(self.cons)
 
             self.set_default_size(500, 500)
-        def b1_clicked(self,b):
-            dialog=gtk.FileChooserDialog(title=None,action=gtk.FILE_CHOOSER_ACTION_OPEN,
-                                  buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-            response = dialog.run()
+            self.dialog=None
+        def mydialog(self,dialog,response):
             if response == gtk.RESPONSE_OK:
-                print dialog.get_filename(), 'selected'
+                file=self.dialog.get_filename()
+                try:
+                    # Open file.
+                    fileImage = None
+                    if(file.lower().endswith(('.png'))):
+                        fileImage = pdb.file_png_load(file, file)
+                    if(file.lower().endswith(('.jpeg', '.jpg'))):
+                        fileImage = pdb.file_jpeg_load(file, file)
+                    if(file.lower().endswith(('.bmp'))):
+                        fileImage = pdb.file_bmp_load(file, file)
+                    if(file.lower().endswith(('.gif'))):
+                        fileImage = pdb.file_gif_load(file, file)
+                    
+                    if(fileImage is None):
+                        gimp.message("The image could not be opened since it is not an image file.")
+                    else :
+                        # fileLayer = fileImage.layers[0]
+                        # # Create new layer.
+                        # image=gimp.Image(fileLayer.width,fileLayer.height)
+                        # newLayer = gimp.Layer(image, "new layer", fileLayer.width,fileLayer.height)#layer.width, layer.height, layer.type, layer.opacity, layer.mode)
+                        # image.add_layer(newLayer, 0)               
+                    
+                        # # Put image into the new layer.
+                        
+                        # pdb.gimp_edit_copy(fileLayer)
+                        # pdb.gimp_edit_paste(newLayer, True)
+                    
+                        # # Update the new layer.
+                        # newLayer.flush()
+                        # newLayer.merge_shadow(True)
+                        # newLayer.update(0, 0, newLayer.width, newLayer.height)
+                        d=gimp.Display(fileImage)
+                    
+                except Exception as err:
+                    gimp.message("Unexpected error: " + str(err))
             elif response == gtk.RESPONSE_CANCEL:
-                print 'Closed, no files selected'
-            dialog.destroy()
+                self.b1.set_label('Closed, no files selected') # if response == gtk.RESPONSE_OK:
+            elif response == gtk.RESPONSE_CANCEL:
+                self.b1.set_label('Closed, no files selected')
+            self.dialog.hide()
+        def b1_clicked(self,b):
+            if self.dialog==None:
+                self.dialog=gtk.FileChooserDialog(title=None,action=gtk.FILE_CHOOSER_ACTION_OPEN,
+                                  buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+                self.dialog.connect("response",self.mydialog)
+                # response = dialog.run()
+                # if response == gtk.RESPONSE_OK:
+                #     print dialog.get_filename(), 'selected'
+                # elif response == gtk.RESPONSE_CANCEL:
+                #     print 'Closed, no files selected'
+                # dialog.destroy()
+            self.dialog.present()
         def response(self, dialog, response_id):
             if response_id == RESPONSE_BROWSE:
                 self.browse()
